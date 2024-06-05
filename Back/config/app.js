@@ -8,6 +8,7 @@ const app = express()
 const port = process.env.PORT || 3200
 
 // aqui van a ir las importaciones de las rutas que vaya a tener
+const userRoutes = require('../src/users/users.routes')
 
 // configurar servidor http
 app.use(express.urlencoded({extended:false}));
@@ -18,7 +19,7 @@ app.use(morgan('dev'));
 
 
 // aqui van a ir las rutas que vaya a tener
-
+app.use('/users', userRoutes)
 
 // Levantar el server
 exports.initServer = () => {
