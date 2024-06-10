@@ -23,7 +23,7 @@ const adminSchema = moongose.Schema({
     },
     dateCreate: {
         type: Date,
-        default: Date.now
+        default: new Date()
     }
 }, {
     versionKey: false
