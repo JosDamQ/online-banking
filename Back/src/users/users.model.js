@@ -9,11 +9,15 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    DPI: {
+    NoIdentification: {
         type: String,
         required: true,
         minlength: 13,
         maxlength: 13
+    },
+    birthdate: {
+        type: Date,
+        required: true
     },
     address: {
         type: String,
@@ -41,6 +45,10 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    ocupation: {
+        type: String,
+        required: true
+    },
     nameWorkPlace: {
         type: String,
         required: true
@@ -52,11 +60,15 @@ const userSchema = mongoose.Schema({
     image: {
         type: String
     },
-    role: {
-        type: String,
-        required: true,
-        enum: ['ADMIN', 'CLIENT']
+    dateCreate: {
+        type: Date,
+        default: Date.now
     }
+    // role: {
+    //     type: String,
+    //     required: true,
+    //     enum: ['ADMIN', 'CLIENT']
+    // }
 
 },{
     versionKey: false
