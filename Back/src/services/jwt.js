@@ -10,11 +10,9 @@ exports.generateToken = async (data) => {
             username: data.username,
             //role: data.role
         }
-    
         const options = {
             expiresIn: '2h'
         }
-    
         const token = jwt.sign(payload, process.env.SECRET_KEY, options)
         return token
     }catch(err){
