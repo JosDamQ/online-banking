@@ -12,6 +12,7 @@ const adminController = require('../src/admins/admin.controller')
 // aqui van a ir las importaciones de las rutas que vaya a tener
 const userRoutes = require('../src/users/users.routes')
 const adminRoutes = require('../src/admins/admin.routes')
+const typeAccountRoutes = require('../src/TypeAccount/typeAccount.routes')
 
 // configurar servidor http
 app.use(express.urlencoded({extended:false}));
@@ -25,6 +26,7 @@ app.use(morgan('dev'));
 app.use('/users', userRoutes)
 app.use('/admins', adminRoutes)
 app.post('/login', adminController.login)
+app.use('/typeAccount', typeAccountRoutes)
 
 // Levantar el server
 exports.initServer = () => {
