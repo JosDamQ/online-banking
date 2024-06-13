@@ -61,12 +61,12 @@ const schemaCreateUser = {
     },
     phone: {
       type: "number",
-      minLength: 8,
-      maxLength: 8,
+      minimum: 10000000,
+      maximum: 99999999,
       errorMessage: {
         type: "Phone must be a number",
-        minLength: "Phone must be 8 characters long",
-        maxLength: "Phone must be 8 characters long",
+        minimum: "Phone must be 8 digits long",
+        maximum: "Phone must be 8 digits long",
       },
     },
     email: {
