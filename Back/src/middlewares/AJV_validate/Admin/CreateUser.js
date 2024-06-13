@@ -109,18 +109,34 @@ const schemaCreateUser = {
     },
     incomings: {
       type: "number",
-      minimum: 0,
+      minimum: 100,
       errorMessage: {
         type: "Incomings must be a number",
-        minimum: "Incomings must be at least 0",
+        minimum: "Incomings must be at least 100",
       },
     },
-    image: {
-      type: "string",
+    accountType: {
+      type: 'string',
+      pattern: '^[0-9a-fA-F]{24}$',
       errorMessage: {
-        type: "Image must be a string",
-      },
+          type: 'AccountType must be a string',
+          pattern: 'AccountType must be a valid ObjectId'
+      }
     },
+    balance: {
+      type: 'number',
+      minimum: 100,
+      errorMessage: {
+          type: 'Balance must be a number',
+          minimum: 'Balance must be at least 100'
+      }
+    }
+    // image: {
+    //   type: "string",
+    //   errorMessage: {
+    //     type: "Image must be a string",
+    //   },
+    // },
   },
   required: [
     "name",
@@ -134,6 +150,8 @@ const schemaCreateUser = {
     "ocupation",
     "nameWorkPlace",
     "incomings",
+    "accountType",
+    "balance"
   ],
   errorMessage: {
     required: {
@@ -148,6 +166,8 @@ const schemaCreateUser = {
       ocupation: "Ocupation is required",
       nameWorkPlace: "NameWorkPlace is required",
       incomings: "Incomings is required",
+      accountType: "AccountType is required",
+      balance: "Balance is required"
     },
   },
   additionalProperties: false,
