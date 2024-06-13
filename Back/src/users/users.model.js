@@ -59,7 +59,7 @@ const userSchema = mongoose.Schema({
     },
     image: {
         type: String,
-        default: 'src/assets/images/default-user.jpg'
+        default: 'src/assets/default-user.jpg'
     },
     dateCreate: {
         type: Date,
