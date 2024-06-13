@@ -3,3 +3,6 @@ node_modules/
 
 # Ignorar el archivo .env
 .env
+
+# Ignorar el archivo de imagenes
+src/assets/images/
