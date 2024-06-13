@@ -30,9 +30,7 @@ function validateParams(schema) {
             const errors = validate.errors.map(error => error.message);
             const errorMessage = errors.join('. ');
             return res.status(400).send({
-                result: false,
                 message: errorMessage,
-                records: ''
             });
         }
 
@@ -51,9 +49,7 @@ function validateQuery(schema) {
             const errors = validate.errors.map(error => error.message);
             const errorMessage = errors.join('. ');
             return res.status(400).send({
-                result: false,
                 message: errorMessage,
-                records: ''
             });
         }
 
