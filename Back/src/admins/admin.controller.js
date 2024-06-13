@@ -2,6 +2,8 @@
 
 const Admin = require('./admin.model')
 const User = require('../users/users.model')
+const Account = require('../accounts/account.model')
+const TypeAccount = require('../TypeAccount/typeAccount.model')
 const { generateToken } = require('../services/jwt')
 const { encrypt, comparePassword } = require('../utils/validate')
 
@@ -74,11 +76,33 @@ exports.createUser = async (req, res, next) => {
         if(usernameExist) return res.status(400).send({ message: 'Username already exists'})
         let NoIdentification = await User.findOne({ NoIdentification: data.NoIdentification })
         if(NoIdentification) return res.status(400).send({ message: 'NoIdentification already exists' })
-
+        //
+        let typeAccount = await TypeAccount.findOne({ _id: data.accountType })
+        if(!typeAccount) return res.status(404).send({ message: 'TypeAccount not found' })
+        // Encrypt password
         data.password = await encrypt(data.password)
+        //Create User
         let user = new User(data)
         await user.save()
-        return res.send({ message: 'User created successfully'})
+
+        //Create account for user
+        const userExist = await User.findOne({ _id: user._id })
+        let accountNumber = Math.floor(Math.random() * 1000000000)
+        const existNumber = await Account.findOne({ accountNumber: accountNumber })
+        while(existNumber){
+            accountNumber = Math.floor(Math.random() * 1000000000)
+            existNumber = await Account.findOne({ accountNumber: accountNumber })
+        }
+
+        let account = new Account({
+            accountNumber: accountNumber,
+            user: userExist._id,
+            accountType: typeAccount._id,
+            balance: data.balance
+        })
+        await account.save()
+
+        return res.send({ message: 'User created successfully with account' })
     }catch(err){
         console.error(err)
         next(err)
