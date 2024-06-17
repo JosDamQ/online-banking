@@ -87,10 +87,13 @@ exports.createUser = async (req, res, next) => {
 
         //Create account for user
         const userExist = await User.findOne({ _id: user._id })
-        let accountNumber = Math.floor(Math.random() * 1000000000)
+        let accountNumber = Math.floor(Math.random() * 9000000000) + 1000000000
         const existNumber = await Account.findOne({ accountNumber: accountNumber })
+
+        if(data.balance < typeAccount.minBalance) return res.status(400).send({ message: 'The balance is less than the minimum allowed' })
+
         while(existNumber){
-            accountNumber = Math.floor(Math.random() * 1000000000)
+            accountNumber = Math.floor(Math.random() * 9000000000) + 1000000000
             existNumber = await Account.findOne({ accountNumber: accountNumber })
         }
 

@@ -13,6 +13,7 @@ const adminController = require('../src/admins/admin.controller')
 const userRoutes = require('../src/users/users.routes')
 const adminRoutes = require('../src/admins/admin.routes')
 const typeAccountRoutes = require('../src/TypeAccount/typeAccount.routes')
+const accountRoutes = require('../src/accounts/account.routes')
 
 // configurar servidor http
 app.use(express.urlencoded({extended:false}));
@@ -27,6 +28,7 @@ app.use('/users', userRoutes)
 app.use('/admins', adminRoutes)
 app.post('/login', adminController.login)
 app.use('/typeAccount', typeAccountRoutes)
+app.use('/account', accountRoutes)
 
 // Levantar el server
 exports.initServer = () => {

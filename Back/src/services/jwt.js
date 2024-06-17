@@ -11,7 +11,9 @@ exports.generateToken = async (data) => {
             //role: data.role
         }
         const options = {
-            expiresIn: '2h'
+            // que expire en un mes
+            expiresIn: '30d'
+            //expiresIn: '2h'
         }
         const token = jwt.sign(payload, process.env.SECRET_KEY, options)
         return token
