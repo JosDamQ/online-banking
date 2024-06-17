@@ -16,6 +16,10 @@ const typeAccountSchema = moongoose.Schema(
         "DEFAULT",
       ],
     },
+    minBalance: {
+      type: Number,
+      required: true,
+    },
   },
   {
     versionKey: false,
