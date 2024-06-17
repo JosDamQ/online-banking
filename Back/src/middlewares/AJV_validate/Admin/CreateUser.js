@@ -125,10 +125,8 @@ const schemaCreateUser = {
     },
     balance: {
       type: 'number',
-      minimum: 100,
       errorMessage: {
           type: 'Balance must be a number',
-          minimum: 'Balance must be at least 100'
       }
     }
     // image: {

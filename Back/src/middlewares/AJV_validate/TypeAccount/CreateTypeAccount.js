@@ -19,12 +19,19 @@ const schemaCreateTypeAccount = {
                 type: 'Name must be a string',
                 enum: 'Name must be SAVINGS, MONETARY, CHILDREN, STUDENT, BUSINESS or DEFAULT'
             }
+        },
+        minBalance: {
+            type: 'number',
+            errorMessage: {
+                type: 'MinBalance must be a number'
+            }
         }
     },
-    required: ['name'],
+    required: ['name', 'minBalance'],
     errorMessage: {
         required: {
-            name: 'Name is required'
+            name: 'Name is required',
+            minBalance: 'MinBalance is required'
         }
     },
     additionalProperties: false
