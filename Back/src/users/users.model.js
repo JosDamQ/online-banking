@@ -45,6 +45,10 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    activate: {
+        type: Number, 
+        default: 0 
+    },
     ocupation: {
         type: String,
         required: true

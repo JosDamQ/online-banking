@@ -6,6 +6,7 @@ const Account = require('../accounts/account.model')
 const TypeAccount = require('../TypeAccount/typeAccount.model')
 const { generateToken } = require('../services/jwt')
 const { encrypt, comparePassword } = require('../utils/validate')
+const sendEmail = require('../services/sendEmails')
 
 exports.createAdminDefault = async (req, res, next) => {
     try{
@@ -104,6 +105,14 @@ exports.createUser = async (req, res, next) => {
             balance: data.balance
         })
         await account.save()
+
+        //Email
+        const dataEmail = {
+            name: data.name,
+            accountNumber: accountNumber,
+        }
+
+        await sendEmail(data.email, 'Welcome to nodeBank', 'welcomeEmail', dataEmail)
 
         return res.send({ message: 'User created successfully with account' })
     }catch(err){
