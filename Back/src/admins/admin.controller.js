@@ -126,7 +126,7 @@ exports.createUser = async (req, res, next) => {
 
 exports.getUsers = async (req, res, next) => {
     try{
-        let users = await User.find().select('-password')
+        const users = await User.find().select('-password')
         if(!users) return res.status(404).send({ message: 'Users not found' })
         return res.send(users)
     }catch(err){
@@ -138,7 +138,7 @@ exports.getUsers = async (req, res, next) => {
 exports.getUserById = async (req, res, next) => {
     try{
         let userId = req.params.id
-        let user = await User.findById(userId).select('-password')
+        const user = await User.findById(userId).select('-password')
         if(!user) return res.status(404).send({ message: 'User not found' })
         return res.send(user)
     }catch(err){
@@ -149,7 +149,7 @@ exports.getUserById = async (req, res, next) => {
 
 exports.getAdmins = async (req, res, next) => {
     try{
-        let admins = await Admin.find().select('-password')
+        const admins = await Admin.find().select('-password')
         if(!admins) return res.status(404).send({ message: 'Admins not found' })
         return res.send(admins)
     }catch(err){
@@ -161,9 +161,35 @@ exports.getAdmins = async (req, res, next) => {
 exports.getAdminById = async (req, res, next) => {
     try{
         let adminId = req.params.id
-        let admin = await Admin.findById(adminId).select('-password')
+        const admin = await Admin.findById(adminId).select('-password')
         if(!admin) return res.status(404).send({ message: 'Admin not found' })
         return res.send(admin)
+    }catch(err){
+        console.error(err)
+        next(err)
+    }
+}
+
+exports.updateUser = async (req, res, next) => {
+    try{
+        let userId = req.params.id
+        let data = req.body
+        const user = await User.findById(userId)
+        if(!user) return res.status(404).send({ message: 'User not found' })
+        //if(data.incomings < 100)
+        const emailExist = await User.findOne({ email: data.email })
+        if(emailExist && emailExist._id != userId) return res.status(400).send({ message: 'Email already exists' })
+        const usernameExist = await User.findOne({ username: data.username })
+        if(usernameExist && usernameExist._id != userId) return res.status(400).send({ message: 'Username already exists'})
+        
+        const updateUser = await User.findByIdAndUpdate(
+            { _id: userId },
+            data,
+            { new: true }
+        ).select('-password')
+
+        return res.send(updateUser)
+        
     }catch(err){
         console.error(err)
         next(err)
