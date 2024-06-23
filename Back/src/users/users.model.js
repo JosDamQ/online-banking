@@ -69,12 +69,6 @@ const userSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     }
-    // role: {
-    //     type: String,
-    //     required: true,
-    //     enum: ['ADMIN', 'CLIENT']
-    // }
-
 },{
     versionKey: false
 })

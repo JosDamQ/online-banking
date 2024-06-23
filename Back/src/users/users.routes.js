@@ -8,6 +8,7 @@ const upload = require('../middlewares/uploadFiles')
 const { verifyToken } = require('../middlewares/loggedIn')
 
 //Rutas
+router.get('/verifyEmail/:token', userController.verifyEmail)
 router.patch('/editMyAccount',verifyToken, upload.single('image') , userController.editMyAccount)
 
 //

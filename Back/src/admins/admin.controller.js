@@ -5,8 +5,10 @@ const User = require('../users/users.model')
 const Account = require('../accounts/account.model')
 const TypeAccount = require('../TypeAccount/typeAccount.model')
 const { generateToken } = require('../services/jwt')
+const { generateVerificationToken } = require('../services/jwt')
 const { encrypt, comparePassword } = require('../utils/validate')
 const sendEmail = require('../services/sendEmails')
+const generateAccountNumber = require('../services/createAccountNumber')
 
 exports.createAdminDefault = async (req, res, next) => {
     try{
@@ -38,6 +40,7 @@ exports.login = async (req, res, next) => {
             let token = await generateToken(admin)
             return res.send({ message: 'Login successfully for admin', token: token })  
         } else if(user) {
+            if(user.activate == 0) return res.status(400).send({ message: 'User not activated' })
             let validPassword = await comparePassword(data.password, user.password)
             if(!validPassword) return res.status(400).send('Invalid password')
             let token = await generateToken(user)
@@ -86,17 +89,15 @@ exports.createUser = async (req, res, next) => {
         let user = new User(data)
         await user.save()
 
+        //Generate token for verification
+        const activationToken = await generateVerificationToken(user)
+        const activationLink = `http://localhost:1234/users/verifyEmail/${activationToken}`;
+
         //Create account for user
         const userExist = await User.findOne({ _id: user._id })
-        let accountNumber = Math.floor(Math.random() * 9000000000) + 1000000000
-        const existNumber = await Account.findOne({ accountNumber: accountNumber })
 
         if(data.balance < typeAccount.minBalance) return res.status(400).send({ message: 'The balance is less than the minimum allowed' })
-
-        while(existNumber){
-            accountNumber = Math.floor(Math.random() * 9000000000) + 1000000000
-            existNumber = await Account.findOne({ accountNumber: accountNumber })
-        }
+        const accountNumber = await generateAccountNumber() 
 
         let account = new Account({
             accountNumber: accountNumber,
@@ -110,6 +111,8 @@ exports.createUser = async (req, res, next) => {
         const dataEmail = {
             name: data.name,
             accountNumber: accountNumber,
+            accountType: typeAccount.name,
+            activationLink: activationLink
         }
 
         await sendEmail(data.email, 'Welcome to nodeBank', 'welcomeEmail', dataEmail)

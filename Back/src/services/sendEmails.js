@@ -3,6 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const handlebars = require('handlebars');
 
+const getTemplate = async(template) => {
+  const templatePath = path.join(__dirname, `../Views/${template}.hbs`);
+  const source = fs.readFileSync(templatePath, 'utf-8').toString();
+  return handlebars.compile(source);
+}
+
 const sendEmail = async (to, subject, template, data) => {
   try{
     const transporter = nodemailer.createTransport({
@@ -14,10 +20,7 @@ const sendEmail = async (to, subject, template, data) => {
       },
     });
 
-    const templatePath = path.join(__dirname, `../Views/${template}.hbs`);
-    const source = fs.readFileSync(templatePath, 'utf-8').toString();
-    const templateEmail = handlebars.compile(source);
-
+    const templateEmail = await getTemplate(template);
     const html = templateEmail(data);
 
     const mailOptions = {

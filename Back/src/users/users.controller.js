@@ -1,7 +1,29 @@
 'use strict'
 
 const User = require('./users.model')
+const jwt = require('jsonwebtoken')
 const deleteFile = require('../utils/deleteFile')
+
+exports.verifyEmail = async (req, res, next) => {
+    try{
+        const { token } = req.params
+        const { id } = jwt.verify(token, process.env.SECRET_KEY)
+
+        const user = await User.findById(id)
+
+        if(!user) return res.status(400).send({message: 'User not found'})
+
+        if(user.activate == 1) return res.status(400).send({message: 'User already activated'})
+        
+        await User.findByIdAndUpdate(id, { activate: 1 });
+
+        return res.status(200).send({message: 'User activated successfully'})
+        
+    }catch(error){
+        console.log(error)
+        next(error)
+    }
+}
 
 exports.editMyAccount = async (req, res, next) => {
     try{

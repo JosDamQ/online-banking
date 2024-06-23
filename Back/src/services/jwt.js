@@ -22,3 +22,17 @@ exports.generateToken = async (data) => {
         return err
     }
 }
+
+exports.generateVerificationToken = async (data) => {
+    try{
+        const payload = {
+            id: data._id,
+        }
+        const options = { }
+        const token = jwt.sign(payload, process.env.SECRET_KEY, options)
+        return token
+    }catch(err){
+        console.log(err)
+        return err
+    }
+}
