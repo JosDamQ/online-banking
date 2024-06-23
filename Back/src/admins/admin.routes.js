@@ -11,12 +11,15 @@ const { validateBody, validateParams, validateQuery } = require('../middlewares/
 const schemaCreateUser = require('../middlewares/AJV_validate/Admin/CreateUser')
 const schemaCreateAdmin = require('../middlewares/AJV_validate/Admin/CreateAdmin')
 const schemaGetUserById = require('../middlewares/AJV_validate/Admin/GetUserById')
+const schemaGetAdminById = require('../middlewares/AJV_validate/Admin/GetAdminById')
 
 //Rutas
 router.post('/create-admin', verifyToken, isAdmin, validateBody(schemaCreateAdmin), adminController.createAdmin)
 router.post('/create-user', verifyToken, isAdmin, validateBody(schemaCreateUser), adminController.createUser)
 router.get('/get-users', verifyToken, isAdmin, adminController.getUsers)
 router.get('/get-user/:id', verifyToken, isAdmin, validateParams(schemaGetUserById), adminController.getUserById)
+router.get('/get-admins', verifyToken, isAdmin, adminController.getAdmins)
+router.get('/get-admin/:id', verifyToken, isAdmin, validateParams(schemaGetAdminById), adminController.getAdminById)
 
 //
 module.exports = router

@@ -126,7 +126,7 @@ exports.createUser = async (req, res, next) => {
 
 exports.getUsers = async (req, res, next) => {
     try{
-        let users = await User.find()
+        let users = await User.find().select('-password')
         if(!users) return res.status(404).send({ message: 'Users not found' })
         return res.send(users)
     }catch(err){
@@ -138,9 +138,32 @@ exports.getUsers = async (req, res, next) => {
 exports.getUserById = async (req, res, next) => {
     try{
         let userId = req.params.id
-        let user = await User.findById(userId)
+        let user = await User.findById(userId).select('-password')
         if(!user) return res.status(404).send({ message: 'User not found' })
-        return res.send(user).select('-password')
+        return res.send(user)
+    }catch(err){
+        console.error(err)
+        next(err)
+    }
+}
+
+exports.getAdmins = async (req, res, next) => {
+    try{
+        let admins = await Admin.find().select('-password')
+        if(!admins) return res.status(404).send({ message: 'Admins not found' })
+        return res.send(admins)
+    }catch(err){
+        console.error(err)
+        next(err)
+    }
+}
+
+exports.getAdminById = async (req, res, next) => {
+    try{
+        let adminId = req.params.id
+        let admin = await Admin.findById(adminId).select('-password')
+        if(!admin) return res.status(404).send({ message: 'Admin not found' })
+        return res.send(admin)
     }catch(err){
         console.error(err)
         next(err)
