@@ -58,13 +58,13 @@ exports.createAdmin = async (req, res, next) => {
     try{
         let data = req.body
         let emailExist = await Admin.findOne({ email: data.email })
-        if(emailExist) return res.status(400).send('Email already exists')
+        if(emailExist) return res.status(400).send({ message: 'Email already exists' })
         let existUsername = await Admin.findOne({ username: data.username })
-        if(existUsername) return res.status(400).send('Username already exists')
+        if(existUsername) return res.status(400).send({ message: 'Username already exists'})
         data.password = await encrypt(data.password)
         let admin = new Admin(data)
         await admin.save()
-        return res.send('Admin created successfully')
+        return res.send({message: 'Admin created successfully'})
     }catch(err){
         console.error(err)
         next(err)
@@ -118,6 +118,29 @@ exports.createUser = async (req, res, next) => {
         await sendEmail(data.email, 'Welcome to nodeBank', 'welcomeEmail', dataEmail)
 
         return res.send({ message: 'User created successfully with account' })
+    }catch(err){
+        console.error(err)
+        next(err)
+    }
+}
+
+exports.getUsers = async (req, res, next) => {
+    try{
+        let users = await User.find()
+        if(!users) return res.status(404).send({ message: 'Users not found' })
+        return res.send(users)
+    }catch(err){
+        console.error(err)
+        next(err)
+    }
+}
+
+exports.getUserById = async (req, res, next) => {
+    try{
+        let userId = req.params.id
+        let user = await User.findById(userId)
+        if(!user) return res.status(404).send({ message: 'User not found' })
+        return res.send(user).select('-password')
     }catch(err){
         console.error(err)
         next(err)
