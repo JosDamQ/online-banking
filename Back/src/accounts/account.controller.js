@@ -98,6 +98,20 @@ exports.getByMovements = async (req, res, next) => {
     }
 }
 
+exports.getMyAccounts = async (req, res, next) => {
+    try{
+        const userId = req.user.id
+        const userExist = await User.findById(userId)
+        if(!userExist) return res.status(404).send({ message: 'User not found' })
+        const accounts = await Account.find({ user: userId }).populate('user', '-password').populate('accountType')
+        if(!accounts) return res.status(404).send({ message: 'client doest not have accounts' })
+        return res.send(accounts)
+    }catch(err){
+        console.error(err)
+        next(err)
+    }
+}
+
 exports.deleteAccount = async (req, res, next) => {
     try{
         const accountId = req.params.id

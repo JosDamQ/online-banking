@@ -18,7 +18,8 @@ const schemaGetByMovements = require('../middlewares/AJV_validate/Account/GetByM
 //Rutas
 router.post('/create', verifyToken, isAdmin, validateBody(schemaCreateAccount), accountController.createAccount)
 router.get('/getAll', verifyToken, isAdmin, accountController.getAccounts)
-router.get('/get/:id', verifyToken, isAdmin, validateParams(schemaGetById), accountController.getAccount)
+router.get('/getMyAccounts', verifyToken, accountController.getMyAccounts)
+router.get('/get/:id', verifyToken, validateParams(schemaGetById), accountController.getAccount)
 router.get('/getByNumber/:accountNumber', verifyToken, isAdmin, validateParams(schemaGetByNumber), accountController.searchAccountByNumber)
 router.get('/getByUser/:id', verifyToken, isAdmin, validateParams(schemaGetByUser), accountController.getAccountsByUser)
 router.get('/getByMovements', verifyToken, isAdmin, validateQuery(schemaGetByMovements), accountController.getByMovements)
