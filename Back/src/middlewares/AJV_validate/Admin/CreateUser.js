@@ -81,10 +81,13 @@ const schemaCreateUser = {
       type: "string",
       minLength: 8,
       maxLength: 50,
+      pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])",
       errorMessage: {
         type: "Password must be a string",
         minLength: "Password must be at least 8 characters long",
         maxLength: "Password must be at most 50 characters long",
+        pattern:
+          "Password must contain at least one lowercase letter, one uppercase letter, one number and one special character",
       },
     },
     ocupation: {
@@ -116,19 +119,19 @@ const schemaCreateUser = {
       },
     },
     accountType: {
-      type: 'string',
-      pattern: '^[0-9a-fA-F]{24}$',
+      type: "string",
+      pattern: "^[0-9a-fA-F]{24}$",
       errorMessage: {
-          type: 'AccountType must be a string',
-          pattern: 'AccountType must be a valid ObjectId'
-      }
+        type: "AccountType must be a string",
+        pattern: "AccountType must be a valid ObjectId",
+      },
     },
     balance: {
-      type: 'number',
+      type: "number",
       errorMessage: {
-          type: 'Balance must be a number',
-      }
-    }
+        type: "Balance must be a number",
+      },
+    },
     // image: {
     //   type: "string",
     //   errorMessage: {
@@ -149,7 +152,7 @@ const schemaCreateUser = {
     "nameWorkPlace",
     "incomings",
     "accountType",
-    "balance"
+    "balance",
   ],
   errorMessage: {
     required: {
@@ -165,7 +168,7 @@ const schemaCreateUser = {
       nameWorkPlace: "NameWorkPlace is required",
       incomings: "Incomings is required",
       accountType: "AccountType is required",
-      balance: "Balance is required"
+      balance: "Balance is required",
     },
   },
   additionalProperties: false,

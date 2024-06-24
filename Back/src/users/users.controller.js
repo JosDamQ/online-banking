@@ -2,6 +2,8 @@
 
 const User = require('./users.model')
 const jwt = require('jsonwebtoken')
+
+const { comparePassword, encrypt } = require('../utils/validate')
 const deleteFile = require('../utils/deleteFile')
 
 exports.verifyEmail = async (req, res, next) => {
@@ -58,6 +60,35 @@ exports.editMyAccount = async (req, res, next) => {
         if (error.message == 'Only images are allowed') {
             return res.status(400).send({ message: 'Archivo no permitido' });
         }
+        console.log(error)
+        next(error)
+    }
+}
+
+exports.updatePassword = async (req, res, next) => {
+    try{
+        let userId = req.user.id
+        let data = req.body
+
+        const user = await User.findById(userId)
+        if(!user) return res.status(400).send({message: 'User not found'})
+
+        let validatePassword = await comparePassword(data.oldPassword, user.password)
+        if(!validatePassword) return res.status(400).send({message: 'Invalid password'})
+        
+        data.newPassword = await encrypt(data.newPassword)
+
+        await User.findByIdAndUpdate( 
+            {_id: userId},
+            {password: data.newPassword},
+            {new: true}
+        )
+
+        return res.status(200).send({message: 'Password updated successfully'})
+        
+        
+        // if(data.password != data.confirmPassword) return res.status(400).send({message: 'Passwords do not match'})
+    }catch(error){
         console.log(error)
         next(error)
     }
