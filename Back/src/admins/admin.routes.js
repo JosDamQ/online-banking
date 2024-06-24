@@ -13,6 +13,7 @@ const schemaCreateAdmin = require('../middlewares/AJV_validate/Admin/CreateAdmin
 const schemaGetUserById = require('../middlewares/AJV_validate/Admin/GetUserById')
 const schemaGetAdminById = require('../middlewares/AJV_validate/Admin/GetAdminById')
 const schemaEditUser = require('../middlewares/AJV_validate/Admin/EditUser')
+const schemaDeleteUser = require('../middlewares/AJV_validate/Admin/DeleteUser')
 
 //Rutas
 router.post('/create-admin', verifyToken, isAdmin, validateBody(schemaCreateAdmin), adminController.createAdmin)
@@ -22,6 +23,7 @@ router.get('/get-user/:id', verifyToken, isAdmin, validateParams(schemaGetUserBy
 router.get('/get-admins', verifyToken, isAdmin, adminController.getAdmins)
 router.get('/get-admin/:id', verifyToken, isAdmin, validateParams(schemaGetAdminById), adminController.getAdminById)
 router.put('/update-user/:id', verifyToken, isAdmin, validateBody(schemaEditUser), adminController.updateUser)
+router.delete('/delete-user/:id', verifyToken, isAdmin, validateParams(schemaDeleteUser), adminController.deleteUser)
 
 //
 module.exports = router

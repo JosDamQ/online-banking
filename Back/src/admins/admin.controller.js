@@ -7,6 +7,9 @@ const TypeAccount = require('../TypeAccount/typeAccount.model')
 const { generateToken } = require('../services/jwt')
 const { generateVerificationToken } = require('../services/jwt')
 const { encrypt, comparePassword } = require('../utils/validate')
+
+//const { deleteAccount } = require('../accounts/account.controller')
+
 const sendEmail = require('../services/sendEmails')
 const generateAccountNumber = require('../services/createAccountNumber')
 
@@ -190,6 +193,31 @@ exports.updateUser = async (req, res, next) => {
 
         return res.send(updateUser)
         
+    }catch(err){
+        console.error(err)
+        next(err)
+    }
+}
+
+exports.deleteUser = async (req, res, next) => {
+    try{
+        let userId = req.params.id
+        //let amount
+        const user = await User.findById(userId)
+        if(!user) return res.status(404).send({ message: 'User not found' })
+        const accounts = await Account.find({ user: userId })
+
+        for (const account of accounts) {
+            if(account.balance > 0) return res.status(400).send({ message: `The user has money in the account ${account.accountNumber}`})
+            //console.log('Aqui se hubiera borrado la cuenta')
+            await Account.findByIdAndDelete(account._id)
+        }
+
+        console.log('Aqui se hubiera borrado el usuario')
+        //return res.send({ message: 'User deleted successfully' })
+        await User.findByIdAndDelete(userId)
+        return res.send({ message: 'User deleted successfully' })
+
     }catch(err){
         console.error(err)
         next(err)
