@@ -40,9 +40,10 @@ exports.getDeposits = async (req, res, next) => {
 exports.getDepositsByAccount = async (req, res, next) => {
     try{
         const accountId = req.params.accountId
+        const limit = parseInt(req.query.limit)
         const accountExist = await Account.findById(accountId)
         if(!accountExist) return res.status(400).send({message: 'Account not found'})
-        const deposits = await Deposit.find({account: accountId})
+        const deposits = await Deposit.find({account: accountId}).sort({date: -1}).limit(limit)
         if(deposits.length === 0) return res.status(404).send({message: 'Deposits not found for this account'})
         return res.status(200).send(deposits)
     }catch(error){
