@@ -4,6 +4,7 @@ const moment = require('moment')
 
 const Deposit = require('./deposit.model')
 const Account = require('../accounts/account.model')
+const { createMovement, types } = require('../movements/movements.controller')
 
 exports.createDeposit = async (req, res, next) => {
     try{
@@ -17,6 +18,8 @@ exports.createDeposit = async (req, res, next) => {
         await deposit.save()
 
         await accountExist.updateOne({$inc: {balance: data.amount, movements: 1}})
+
+        await createMovement(types.deposit, data.account, null, data.amount)
 
         return res.status(201).send({message: 'Deposit created successfully', deposit})
         
