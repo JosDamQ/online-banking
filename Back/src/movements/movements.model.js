@@ -22,7 +22,28 @@ const movementSchema = mongoose.Schema({
         required: true
     },
     description: {
-        type: String
+        type: String,
+        default: null
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'completed', 'canceled'],
+        default: 'completed'
+    },
+    deposit_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Deposit',
+        default: null
+    },
+    withdraw_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Withdraw',
+        default: null
+    },
+    transfer_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Transfer',
+        default: null
     },
     date: {
         type: Date,

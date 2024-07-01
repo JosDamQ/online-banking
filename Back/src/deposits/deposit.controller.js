@@ -4,7 +4,7 @@ const moment = require('moment')
 
 const Deposit = require('./deposit.model')
 const Account = require('../accounts/account.model')
-const { createMovement, types } = require('../movements/movements.controller')
+const { createMovement, cancelMovement, types } = require('../movements/movements.controller')
 
 exports.createDeposit = async (req, res, next) => {
     try{
@@ -19,7 +19,7 @@ exports.createDeposit = async (req, res, next) => {
 
         await accountExist.updateOne({$inc: {balance: data.amount, movements: 1}})
 
-        await createMovement(types.deposit, data.account, null, data.amount)
+        await createMovement(types.deposit, data.account, null, data.amount, null, deposit._id)
 
         return res.status(201).send({message: 'Deposit created successfully', deposit})
         
@@ -89,6 +89,8 @@ exports.cancelDeposit = async (req, res, next) => {
 
         await accountExist.updateOne({$inc: {balance: -depositExist.amount, movements: -1}})
         await Deposit.findByIdAndDelete(depositId)
+
+        await cancelMovement(depositId)
 
         return res.status(200).send({message: 'Deposit canceled successfully'})
     }catch(error){
